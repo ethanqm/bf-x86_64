@@ -94,7 +94,7 @@ _interpret:
   # stop on non-printing character
   cmp byte ptr [r12], 0x20 # control char below <SPACE>
   jl _end_interpret
-  cmp byte ptr [r12], 0x7F # <DEL> or 0x1xxxxxx
+  cmp byte ptr [r12], 0x7F # <DEL> or 0b1xxxxxx
   jge _end_interpret
 
   # ignore all other characters
