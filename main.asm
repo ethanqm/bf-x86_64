@@ -143,6 +143,9 @@ _bf_read:           # ,
   jmp _next_instruction
 
 _bf_loop_start:     # [
+  cmp byte ptr [bf_mem+r14], 0 # skip loop condition
+  je _bf_skip_loop
+  # else enter loop
   push r12 # save loop start
   jmp _next_instruction
 
@@ -153,7 +156,13 @@ _bf_loop_end:       # ]
   add rsp, 8 # remove pointer to start of loop
   jmp _next_instruction
 
-
+_bf_skip_loop:
+  inc r12
+  cmp byte ptr [r12], ']
+  je _next_instruction
+  cmp r12, bf_mem+1024
+  jge _end_interpret # end of buffer fail
+  jmp _bf_skip_loop
 
 _start:
   pop rax           # argc
