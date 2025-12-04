@@ -114,16 +114,16 @@ _bf_dec:            # -
 
 _bf_right:          # >
   inc r14
-  cmp r14, 256 # past the end
+  cmp r14, 256  # past the end
   jne _next_instruction
-  mov r14, 0   # wrap around
+  mov r14, 0    # wrap around
   jmp _next_instruction
 
 _bf_left:           # <
   dec r14
-  cmp r14, 256     # past the end
+  cmp r14, 256  # past the end
   jl _next_instruction
-  mov r14, 255    # wrap around
+  mov r14, 255  # wrap around
   jmp _next_instruction
 
 _bf_print:          # .
