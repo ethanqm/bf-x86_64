@@ -104,29 +104,29 @@ _end_interpret:
   ret
 
 
-_bf_inc:
+_bf_inc:            # +
   inc byte ptr [bf_mem+r14]
   jmp _next_instruction
 
-_bf_dec:
+_bf_dec:            # -
   dec byte ptr [bf_mem+r14]
   jmp _next_instruction
 
-_bf_right:
+_bf_right:          # >
   inc r14
   cmp r14, 256 # past the end
   jne _next_instruction
   mov r14, 0   # wrap around
   jmp _next_instruction
 
-_bf_left:
+_bf_left:           # <
   dec r14
-  cmp r14, -1 # past the end
-  jne _next_instruction
-  mov r14, 255   # wrap around
+  cmp r14, 256     # past the end
+  jl _next_instruction
+  mov r14, 255    # wrap around
   jmp _next_instruction
 
-_bf_print:
+_bf_print:          # .
   mov rax, 1
   mov rdi, 1
   lea rsi, [bf_mem+r14]
@@ -134,7 +134,7 @@ _bf_print:
   syscall
   jmp _next_instruction
 
-_bf_read:
+_bf_read:           # ,
   mov rax, 0
   mov rdi, 0
   mov rdx, 1
@@ -142,11 +142,11 @@ _bf_read:
   syscall
   jmp _next_instruction
 
-_bf_loop_start:
+_bf_loop_start:     # [
   push r12 # save loop start
   jmp _next_instruction
 
-_bf_loop_end:
+_bf_loop_end:       # ]
   cmp byte ptr [bf_mem+r14], 0 # end loop condition
   jne _continue_loop
   # loop now ends
