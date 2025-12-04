@@ -114,16 +114,16 @@ _bf_dec:            # -
 
 _bf_right:          # >
   inc r14
-  cmp r14, 256  # past the end
+  cmp r14, bf_mem_sz    # past the end
   jne _next_instruction
-  mov r14, 0    # wrap around
+  mov r14, 0            # wrap around
   jmp _next_instruction
 
 _bf_left:           # <
   dec r14
-  cmp r14, 256  # past the end
+  cmp r14, bf_mem_sz    # past the end
   jl _next_instruction
-  mov r14, 255  # wrap around
+  mov r14, bf_mem_sz-1  # wrap around
   jmp _next_instruction
 
 _bf_print:          # .
@@ -160,9 +160,10 @@ _bf_skip_loop:
   inc r12
   cmp byte ptr [r12], ']
   je _next_instruction
-  cmp r12, bf_mem+1024
+  cmp r12, bf_mem+bf_mem_sz
   jge _end_interpret # end of buffer fail
   jmp _bf_skip_loop
+
 
 _start:
   pop rax           # argc
@@ -171,9 +172,6 @@ _start:
   
   pop rax           # argv[0] ./main
   mov rax, [rsp]    # argv[1] .bf file (peek)
-  
-  #mov rsi, rax   # debug
-  #call _printzln # debug
 
   # open file
   mov rdi, rax  # move filename
