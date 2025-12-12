@@ -105,11 +105,21 @@ _end_interpret:
 
 
 _bf_inc:            # +
+  cmp byte ptr [bf_mem+r14], 255
+  je _bf_mem_overflow
   inc byte ptr [bf_mem+r14]
+  jmp _next_instruction
+_bf_mem_overflow:
+  mov byte ptr [bf_mem+r14], 0
   jmp _next_instruction
 
 _bf_dec:            # -
+  cmp byte ptr [bf_mem+r14], 0
+  je _bf_mem_underflow
   dec byte ptr [bf_mem+r14]
+  jmp _next_instruction
+_bf_mem_underflow:
+  mov byte ptr [bf_mem+r14], 255
   jmp _next_instruction
 
 _bf_right:          # >
